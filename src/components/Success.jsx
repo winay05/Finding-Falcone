@@ -8,7 +8,7 @@ const Success = (props) => {
   ) : (
     <>
       <h1>Success</h1>
-      <p>Falcone found at {props.location.pathname.slice(1).split("/")[1]}</p>
+      <p>Falcone found on {props.location.pathname.slice(1).split("/")[1]}</p>
       <Link to="/">
         <Button>Go back</Button>
       </Link>

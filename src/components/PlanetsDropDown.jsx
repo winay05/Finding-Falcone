@@ -34,7 +34,7 @@ const PlanetsDropDown = ({
           ))}
       </select>
 
-      {focusVehicleIdx >= destinationId ? children : null}
+      {focusVehicleIdx >= destinationId ? <div>{children}</div> : null}
     </>
   );
 };

@@ -150,38 +150,6 @@ export default class Home extends Component {
     );
   };
 
-  getLeftPlanets = () => {
-    let bitmMask = this.planets.map(
-      (el) => this.state.selectedPlanets.indexOf(el) >= 0
-    );
-    let arr = this.planets.map((el, idx) => (
-      <option disabled={bitmMask[idx]} value={idx}>
-        {el.name}
-      </option>
-    ));
-    arr = [<option value="select">Select</option>, ...arr];
-    return arr;
-  };
-
-  getLeftVehicles = () => {
-    let leftVehicles = [...this.vehicles];
-    const vehicleMap = new Map();
-    this.state.selectedVehicles.forEach((element) => {
-      let x = 0;
-      if (vehicleMap.get(element)) x = vehicleMap.get(element);
-
-      vehicleMap.set(element, x + 1);
-    });
-    leftVehicles = leftVehicles.map((el) => {
-      const x = vehicleMap.get(el.name);
-      if (x) {
-        return { ...el, total_no: el.total_no - x };
-      } else return { ...el };
-    });
-
-    return leftVehicles;
-  };
-
   calculateTime = (vehicleName) => {
     let t = 0;
 
@@ -219,8 +187,8 @@ export default class Home extends Component {
         focusDestinationIdx: destinationId + 1,
         availableVehicles: [...newAvailable],
         time: this.calculateTime(vehicleName),
-      },
-      () => console.log(this.state)
+      }
+      // () => console.log(this.state)
     );
   };
   render() {

@@ -1,0 +1,9 @@
+@media screen and (max-width: 767px) {
+  .options-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+.options-container {
+}
