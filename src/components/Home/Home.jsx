@@ -22,10 +22,10 @@ export default class Home extends Component {
       token: "",
       selectedPlanets: [""],
       selectedVehicles: [""],
-      availablePlanets: [""], //to keep history of available planets to all the menus
+      availablePlanets: [""], //to keep history of available planets at a particular destination
       availableVehicles: [""],
-      focusDestinationIdx: 0,
-      focusVehicleIdx: -1,
+      focusDestinationIdx: 0, // to control the disable/enable of planet dropdowns
+      focusVehicleIdx: -1, // to view hide the vehicle radio buttons
       currentVehicles: [],
       time: 0,
       loading: false,
@@ -66,14 +66,14 @@ export default class Home extends Component {
     };
     this.setState({ loading: true });
     let res = await makePostRequest(apiEndpoint.find, body, "result");
+    this.setState({ loading: false });
     if (res && res.status === "success") {
       this.found = true;
       // this.foundAt= res.planet_name;
-      this.setState({ loading: false, found: true, location: res.planet_name });
+      this.setState({ found: true, location: res.planet_name });
       // alert(`Found Falcone at ${res.planet_name}`);
       return true;
     }
-    this.setState({ loading: false });
     alert("failed to find Falcone!");
     this.reset();
     return false;
@@ -108,7 +108,6 @@ export default class Home extends Component {
       }
       // () => console.log(this.state)
     );
-    // this.setState({  });
   };
   async componentDidMount() {
     this.setState({ loading: true });
@@ -199,6 +198,8 @@ export default class Home extends Component {
     newSelected[destinationId] = vehicleName;
 
     let newAvailable = this.state.availableVehicles;
+
+    //deduct from the count of currently selected vehicle
     newAvailable[destinationId + 1] = newAvailable[destinationId].map((e) => {
       if (e.name === vehicleName) {
         return {
@@ -224,6 +225,7 @@ export default class Home extends Component {
   render() {
     return (
       <>
+        {/* if loading, display spinner */}
         {this.state.loading ? <LoadingSpinner /> : null}
 
         {this.state.found ? (
@@ -249,13 +251,7 @@ export default class Home extends Component {
               <p>Select the planets you want to search in</p>
               <Row>
                 <Col>
-                  <h4
-                    style={{
-                      width: "fit-content",
-                      marginLeft: "auto",
-                      marginBottom: "1.5rem",
-                    }}
-                  >
+                  <h4 className="time-display">
                     Time Taken: {this.state.time}
                   </h4>
                 </Col>

@@ -48,3 +48,9 @@
 .divider {
   border-right: 1px solid grey;
 }
+
+.time-display {
+  width: fit-content;
+  margin-left: auto;
+  margin-bottom: 1.5rem;
+}
