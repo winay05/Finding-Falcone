@@ -18,8 +18,8 @@ Given the API endpoints for [Planets](https://findfalcone.herokuapp.com/planets)
 
 ## Links
 
-- [Github]()
-- [Live]()
+- [Github](https://github.com/winay05/Finding-Falcone)
+- [Live](https://finding-falcone-vinay.netlify.app/)
 
 ## Built using:
 
