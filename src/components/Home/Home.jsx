@@ -64,7 +64,6 @@ export default class Home extends Component {
       planet_names: this.state.selectedPlanets,
       vehicle_names: this.state.selectedVehicles,
     };
-    // console.log(body);
     this.setState({ loading: true });
     let res = await makePostRequest(apiEndpoint.find, body, "result");
     if (res && res.status === "success") {
@@ -130,7 +129,6 @@ export default class Home extends Component {
     this.setState({ loading: false });
   }
   handleChange = (planetName, destinationId) => {
-    // console.log("inside change Handler, home");
     let newSelected = [...this.state.selectedPlanets];
     newSelected[destinationId] = planetName;
     // newSelected = newSelected.slice(0, destinationId + 1);
@@ -138,10 +136,6 @@ export default class Home extends Component {
     newAvailable[destinationId + 1] = this.planets.filter(
       (e) => newSelected.indexOf(e.name) < 0
     );
-
-    if (destinationId < this.state.focusDestinationIdx) {
-      this.setState({ focusDestinationIdx: destinationId });
-    }
 
     this.setState(
       {
@@ -151,6 +145,40 @@ export default class Home extends Component {
       }
       // () => console.log(this.state)
     );
+
+    // to take care of situtaion in which a back destination is selected
+
+    if (destinationId < this.state.focusDestinationIdx) {
+      //take [0,idx] selected planets
+      newSelected = newSelected.slice(0, destinationId + 1);
+      //take [0, idx-1] selected vehicles
+      let newSelectedVehicles = this.state.selectedVehicles.slice(
+        0,
+        destinationId
+      );
+
+      //take [0, idx+1] available planets
+      newAvailable = newAvailable.slice(0, destinationId + 2);
+      // take [0,idx-1] available vehicles
+      let newAvailableVehicles = this.state.availableVehicles.slice(
+        0,
+        destinationId + 1
+      );
+      ///restore the currentVehicle state to all the last available vehicles
+      let newCurrentVehicles = [...newAvailableVehicles[destinationId]];
+      this.setState(
+        {
+          focusDestinationIdx: destinationId,
+          selectedPlanets: [...newSelected],
+          focusVehicleIdx: destinationId,
+          availablePlanets: [...newAvailable],
+          availableVehicles: [...newAvailableVehicles],
+          selectedVehicles: [...newSelectedVehicles],
+          currentVehicles: newCurrentVehicles,
+        }
+        // () => console.log(this.state)
+      );
+    }
   };
 
   calculateTime = (vehicleName) => {
@@ -167,7 +195,6 @@ export default class Home extends Component {
     return t;
   };
   selectVehicle = (vehicleName, destinationId) => {
-    // console.log("inside change Handler, home");
     let newSelected = [...this.state.selectedVehicles];
     newSelected[destinationId] = vehicleName;
 
@@ -201,7 +228,7 @@ export default class Home extends Component {
 
         {this.state.found ? (
           <Redirect
-            to={`/success/${this.state.location}/${this.state.token}`}
+            to={`/success/${this.state.location}/${this.state.token}/${this.state.time}`}
           />
         ) : (
           <>

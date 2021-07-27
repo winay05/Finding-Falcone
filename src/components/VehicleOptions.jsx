@@ -28,8 +28,7 @@ const VehicleOptions = ({ vehicles, planet, destinationId, selectVehicle }) => {
             type="radio"
             name={`vehicles-${destinationId}`}
             value={vehicle.name}
-            onChange={(e) => {
-              // console.log(idx);
+            onClick={(e) => {
               changeSelect(idx);
               selectVehicle(vehicle.name, destinationId);
             }}
