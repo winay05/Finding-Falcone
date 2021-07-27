@@ -8,6 +8,8 @@ import VehicleOptions from "../VehicleOptions";
 import { Redirect } from "react-router-dom";
 import LoadingSpinner from "../common/LoadingSpinner";
 
+import "./Home.css";
+
 export default class Home extends Component {
   constructor() {
     super();
@@ -74,6 +76,7 @@ export default class Home extends Component {
     }
     this.setState({ loading: false });
     alert("failed to find Falcone!");
+    this.reset();
     return false;
   };
 
@@ -204,11 +207,11 @@ export default class Home extends Component {
           <>
             <Container>
               <Row>
-                <div style={{ width: "fit-content", marginLeft: "auto" }}>
+                <div className="nav-button-container">
                   <Button variant="light" onClick={this.reset}>
                     Reset
                   </Button>
-                  <span style={{ borderRight: "1px solid grey" }}></span>
+                  <span className="divider" />
                   <a className="btn btn-light" href="https://www.geektrust.in">
                     Geektrust Home
                   </a>
@@ -219,7 +222,7 @@ export default class Home extends Component {
               <p>Select the planets you want to search in</p>
               <Row>
                 <Col>
-                  <h3
+                  <h4
                     style={{
                       width: "fit-content",
                       marginLeft: "auto",
@@ -227,14 +230,18 @@ export default class Home extends Component {
                     }}
                   >
                     Time Taken: {this.state.time}
-                  </h3>
+                  </h4>
                 </Col>
               </Row>
-              <Row style={{ minHeight: 200 }}>
+              <Row className="options-container">
                 {/* prints the req no of dropdowns, in this case, 4 */}
                 {[...Array(COUNT.maxDestinations).keys()].map(
                   (destinationId) => (
-                    <Col key={destinationId} sm={3}>
+                    <Col
+                      className="dropdown-container"
+                      key={destinationId}
+                      md={3}
+                    >
                       {destinationId > this.state.focusDestinationIdx ? (
                         <select disabled>
                           <option>Select</option>
@@ -265,15 +272,17 @@ export default class Home extends Component {
                   )
                 )}
               </Row>
+
+              <Button
+                style={{ marginBottom: "5rem" }}
+                disabled={
+                  this.state.selectedVehicles.length < COUNT ? true : false
+                }
+                onClick={this.findFalcone}
+              >
+                Find Falcone
+              </Button>
             </Container>
-            <Button
-              disabled={
-                this.state.selectedVehicles.length < COUNT ? true : false
-              }
-              onClick={this.findFalcone}
-            >
-              Find Falcone
-            </Button>
           </>
         )}
       </>

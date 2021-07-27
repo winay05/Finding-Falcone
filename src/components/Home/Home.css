@@ -1,9 +1,50 @@
 @media screen and (max-width: 767px) {
   .options-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
   }
+  .vehicle-options {
+    margin-right: 3rem;
+  }
+
+  .dropdown-container {
+    display: flex;
+    padding: 0 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .dropdown-container > div.vehicle-button-container {
+    margin-left: 2rem;
+  }
 }
+.dropdown-container {
+  padding: 0 1rem;
+}
+.dropdown-container > select {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.dropdown-container > div.vehicle-button-container {
+  margin-top: 2rem;
+}
+
 .options-container {
+  min-height: 200px;
+  padding-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.vehicle-options {
+  margin-top: 1rem;
+}
+.nav-button-container {
+  width: fit-content !important;
+  margin-left: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.divider {
+  border-right: 1px solid grey;
 }

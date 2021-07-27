@@ -17,6 +17,7 @@ function App() {
           <Home />
         </Route>
       </Switch>
+      {/* <footer>This is footer</footer> */}
       <Footer />
     </div>
   );
