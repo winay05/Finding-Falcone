@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Col, Container, Row, Button, Spinner } from "react-bootstrap";
+import { Col, Container, Row, Button } from "react-bootstrap";
 
 import { apiEndpoint, COUNT } from "../../util/config";
 import { makeGetRequest, makePostRequest } from "../../util/callApi";
@@ -24,6 +24,7 @@ export default class Home extends Component {
       availableVehicles: [""],
       focusDestinationIdx: 0,
       focusVehicleIdx: -1,
+      currentVehicles: [],
       time: 0,
       loading: false,
       found: false,
@@ -82,57 +83,70 @@ export default class Home extends Component {
       selectedVehicles: [""],
       availablePlanets: [""],
       availableVehicles: [""],
+      currentVehicles: this.vehicles,
       focusDestinationIdx: 0,
       focusVehicleIdx: -1,
       time: 0,
     });
 
-    let newAvailable = this.state.availablePlanets;
-    newAvailable[0] = [...this.planets];
-    this.setState({ availablePlanets: [...newAvailable] });
+    let newAvailablePlanets = [
+      this.planets,
+      ...this.state.availablePlanets,
+    ].slice(0, 1);
 
-    newAvailable = this.state.availableVehicles;
-    newAvailable[0] = [...this.vehicles];
-    this.setState({ availableVehicles: [...newAvailable] });
+    let newAvailableVehicles = [
+      this.vehicles,
+      ...this.state.availableVehicles,
+    ].slice(0, 1);
+
+    this.setState(
+      {
+        availablePlanets: newAvailablePlanets,
+        availableVehicles: newAvailableVehicles,
+      }
+      // () => console.log(this.state)
+    );
+    // this.setState({  });
   };
   async componentDidMount() {
     this.setState({ loading: true });
     let res;
     res = await this.getPlanets();
     if (res) this.planets = [...res];
-
     res = await this.getVehicles();
     if (res) this.vehicles = [...res];
-
     res = await this.getToken();
     if (res) this.setState({ token: res });
-
     let newAvailable = this.state.availablePlanets;
     newAvailable[0] = [...this.planets];
     this.setState({ availablePlanets: [...newAvailable] });
-
     newAvailable = this.state.availableVehicles;
     newAvailable[0] = [...this.vehicles];
     this.setState({ availableVehicles: [...newAvailable] });
+    this.setState({ currentVehicles: this.vehicles });
     this.setState({ loading: false });
   }
   handleChange = (planetName, destinationId) => {
     // console.log("inside change Handler, home");
     let newSelected = [...this.state.selectedPlanets];
     newSelected[destinationId] = planetName;
-
+    // newSelected = newSelected.slice(0, destinationId + 1);
     let newAvailable = this.state.availablePlanets;
     newAvailable[destinationId + 1] = this.planets.filter(
       (e) => newSelected.indexOf(e.name) < 0
     );
+
+    if (destinationId < this.state.focusDestinationIdx) {
+      this.setState({ focusDestinationIdx: destinationId });
+    }
 
     this.setState(
       {
         selectedPlanets: [...newSelected],
         focusVehicleIdx: destinationId,
         availablePlanets: [...newAvailable],
-      },
-      () => console.log(this.state)
+      }
+      // () => console.log(this.state)
     );
   };
 
@@ -197,9 +211,10 @@ export default class Home extends Component {
         return { ...e };
       }
     });
-    this.vehicles = [...newAvailable[destinationId + 1]];
+
     this.setState(
       {
+        currentVehicles: [...newAvailable[destinationId + 1]],
         selectedVehicles: [...newSelected],
         focusDestinationIdx: destinationId + 1,
         availableVehicles: [...newAvailable],
@@ -220,36 +235,64 @@ export default class Home extends Component {
         ) : (
           <>
             <Container>
+              <Row>
+                <div style={{ width: "fit-content", marginLeft: "auto" }}>
+                  <Button variant="light" onClick={this.reset}>
+                    Reset
+                  </Button>
+                  <span style={{ borderRight: "1px solid grey" }}></span>
+                  <a className="btn btn-light" href="https://www.geektrust.in">
+                    Geektrust Home
+                  </a>
+                </div>
+              </Row>
+
               <h1>Finding Falcone!</h1>
               <p>Select the planets you want to search in</p>
               <Row>
-                <Col className="ml-auto ">
-                  <h1>Time Taken: {this.state.time}</h1>
+                <Col>
+                  <h3
+                    style={{
+                      width: "fit-content",
+                      marginLeft: "auto",
+                      marginBottom: "1.5rem",
+                    }}
+                  >
+                    Time Taken: {this.state.time}
+                  </h3>
                 </Col>
               </Row>
-              <Row>
+              <Row style={{ minHeight: 200 }}>
                 {/* prints the req no of dropdowns, in this case, 4 */}
                 {[...Array(COUNT.maxDestinations).keys()].map(
                   (destinationId) => (
                     <Col key={destinationId} sm={3}>
-                      <PlanetsDropDown
-                        focusDestinationIdx={this.state.focusDestinationIdx}
-                        focusVehicleIdx={this.state.focusVehicleIdx}
-                        destinationId={destinationId}
-                        handleChange={this.handleChange}
-                        planets={this.state.availablePlanets[destinationId]}
-                      >
-                        <VehicleOptions
+                      {destinationId > this.state.focusDestinationIdx ? (
+                        <select disabled>
+                          <option>Select</option>
+                        </select>
+                      ) : (
+                        <PlanetsDropDown
+                          focusDestinationIdx={this.state.focusDestinationIdx}
+                          focusVehicleIdx={this.state.focusVehicleIdx}
                           destinationId={destinationId}
-                          planet={this.planets.find(
-                            (el) =>
-                              el.name ===
-                              this.state.selectedPlanets[destinationId]
-                          )}
-                          vehicles={this.state.availableVehicles[destinationId]}
-                          selectVehicle={this.selectVehicle}
-                        />
-                      </PlanetsDropDown>
+                          handleChange={this.handleChange}
+                          planets={this.state.availablePlanets[destinationId]}
+                        >
+                          <VehicleOptions
+                            destinationId={destinationId}
+                            planet={this.planets.find(
+                              (el) =>
+                                el.name ===
+                                this.state.selectedPlanets[destinationId]
+                            )}
+                            vehicles={
+                              this.state.availableVehicles[destinationId]
+                            }
+                            selectVehicle={this.selectVehicle}
+                          />
+                        </PlanetsDropDown>
+                      )}
                     </Col>
                   )
                 )}

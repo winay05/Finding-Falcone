@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const PlanetsDropDown = ({
   focusVehicleIdx,
@@ -8,16 +8,18 @@ const PlanetsDropDown = ({
   handleChange,
   children,
 }) => {
-  // console.log(planets);
   const [selected, ChangeSelect] = useState("select");
   const changeHandler = (e) => {
     ChangeSelect(e.target.value);
     handleChange(e.target.value, destinationId);
   };
+  useEffect(() => {
+    ChangeSelect("select");
+  }, []);
   return (
     <>
       <select
-        defaultValue={selected}
+        value={selected}
         disabled={!planets || destinationId > focusDestinationIdx}
         onChange={changeHandler}
       >

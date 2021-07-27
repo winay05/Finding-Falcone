@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const VehicleOptions = ({ vehicles, planet, destinationId, selectVehicle }) => {
   const [selected, changeSelect] = useState(-1);
@@ -11,6 +11,9 @@ const VehicleOptions = ({ vehicles, planet, destinationId, selectVehicle }) => {
 
     return result;
   };
+  useEffect(() => {
+    changeSelect(-1);
+  }, []);
   return (
     <>
       {vehicles.map((vehicle, idx) => (
