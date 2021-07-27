@@ -219,7 +219,7 @@ export default class Home extends Component {
           />
         ) : (
           <>
-            <Container style={{ minHeight: "500px" }}>
+            <Container>
               <h1>Finding Falcone!</h1>
               <p>Select the planets you want to search in</p>
               <Row>
