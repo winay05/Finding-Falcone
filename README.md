@@ -33,21 +33,6 @@ Given the API endpoints for [Planets](https://findfalcone.herokuapp.com/planets)
 
 <hr/>
 <br/>
-
-## What works:
-
-- Layout(as per requirements)- mobile friendly
-- API calls
-- Success page
-- Can go back to change some prev destination
-- Disabling vehicles on distance exceeding max_distance or on zero left
-
-  ### what doesn't work:
-
-  - unselecting radio button on prop change works funny.
-
-<br/>
-<hr/>
 <br/>     
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 <br/>
